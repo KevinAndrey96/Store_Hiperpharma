@@ -56,7 +56,11 @@ class IndexController {
             rescat5.push(product)
         }
 
-        return view.render("index",{cats1: rescat1,cats2: rescat2,cats3: rescat3,cats4: rescat4,cats5: rescat5})
+        const categories= await Category.all()
+        //console.log(rescat5)
+
+
+        return view.render("index",{cats1: rescat1,cats2: rescat2,cats3: rescat3,cats4: rescat4,cats5: rescat5, categories: categories.toJSON()})
     }
     async categories({request, response, view})
     {

@@ -20,15 +20,16 @@
     <!-- GOOGLE WEB FONT -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
 
-    <!-- BASE CSS -->
-    <link href="css/bootstrap.custom.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+	<!-- BASE CSS -->
+	{{ style('css/bootstrap.custom.min.css') }}
+    
+    {{ style('css/style.css')}}
 
 	<!-- SPECIFIC CSS -->
-    <link href="css/home_1.css" rel="stylesheet">
+    {{ style('css/home_1.css') }}
 
     <!-- YOUR CUSTOM CSS -->
-    <link href="css/custom.css" rel="stylesheet">
+    {{ style('css/custom.css')}}
 
 </head>
 
@@ -174,56 +175,10 @@
 									</span>
 									<div id="menu">
 										<ul>
-											<li><span><a href="#">Collections</a></span>
-												<ul>
-													<li><a href="#">Trending</a></li>
-													<li><a href="listing-grid-2-full.html">Life style</a></li>
-													<li><a href="listing-grid-3.html">Running</a></li>
-													<li><a href="listing-grid-4-sidebar-left.html">Training</a></li>
-													<li><a href="listing-grid-5-sidebar-right.html">View all Collections</a></li>
-												</ul>
+											@each(category in categories)
+												<li><span><a href="products_list/{{category.id}}">{{category.name}}</a></span>
 											</li>
-											<li><span><a href="#">Men</a></span>
-												<ul>
-													<li><a href="listing-grid-6-sidebar-left.html">Offers</a></li>
-													<li><a href="listing-grid-7-sidebar-right.html">Shoes</a></li>
-													<li><a href="listing-row-1-sidebar-left.html">Clothing</a></li>
-													<li><a href="listing-row-3-sidebar-left.html">Accessories</a></li>
-													<li><a href="listing-row-4-sidebar-extended.html">Equipment</a></li>
-												</ul>
-											</li>
-											<li><span><a href="#">Women</a></span>
-												<ul>
-													<li><a href="#">Best Sellers</a></li>
-													<li><a href="listing-grid-2-full.html">Clothing</a></li>
-													<li><a href="listing-grid-3.html">Accessories</a></li>
-													<li><a href="listing-grid-4-sidebar-left.html">Shoes</a></li>
-												</ul>
-											</li>
-											<li><span><a href="#">Boys</a></span>
-												<ul>
-													<li><a href="listing-grid-6-sidebar-left.html">Easy On Shoes</a></li>
-													<li><a href="listing-grid-7-sidebar-right.html">Clothing</a></li>
-													<li><a href="listing-row-3-sidebar-left.html">Must Have</a></li>
-													<li><a href="listing-row-4-sidebar-extended.html">All Boys</a></li>
-												</ul>
-											</li>
-											<li><span><a href="#">Girls</a></span>
-												<ul>
-													<li><a href="#">New Releases</a></li>
-													<li><a href="listing-grid-2-full.html">Clothing</a></li>
-													<li><a href="listing-grid-3.html">Sale</a></li>
-													<li><a href="listing-grid-4-sidebar-left.html">Best Sellers</a></li>
-												</ul>
-											</li>
-											<li><span><a href="#">Customize</a></span>
-												<ul>
-													<li><a href="listing-row-1-sidebar-left.html">For Men</a></li>
-													<li><a href="listing-row-2-sidebar-right.html">For Women</a></li>
-													<li><a href="listing-row-4-sidebar-extended.html">For Boys</a></li>
-													<li><a href="#">For Girls</a></li>
-												</ul>
-											</li>
+											@endeach
 										</ul>
 									</div>
 								</li>
@@ -389,11 +344,9 @@
 	<div id="toTop"></div><!-- Back to top button -->
 	
 	<!-- COMMON SCRIPTS -->
-    <script src="js/common_scripts.min.js"></script>
-    <script src="js/main.js"></script>
-	
-	<!-- SPECIFIC SCRIPTS -->
-	<script src="js/carousel-home.js"></script>
+	{{ script('js/common_scripts.min.js') }}
+	{{ script('js/main.js') }}
+	{{ script('js/carousel-home.js') }}
 
 </body>
 </html>
