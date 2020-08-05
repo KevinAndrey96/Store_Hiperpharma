@@ -1,39 +1,31 @@
-@layout('layouts.mastergen')
+@layout('layouts.principal')
 @section('main')
 <script>
-	function vaciar()
-	{
-		localStorage.clear()
-		window.alert("Carrito vaciado correctamente")
-		window.location.href="/"
-	}
-	function formatCurrency (locales, currency, fractionDigits, number) {
-        var formatted = new Intl.NumberFormat(locales, {
-          style: 'currency',
-          currency: currency,
-          minimumFractionDigits: fractionDigits
-        }).format(number);
-        return formatted;
-      }
 	$(document).ready(function() {
 		try{
 			const objeto=JSON.parse(localStorage.getItem('Pcart'))
-			console.log(parseInt(objeto.cart[0].Quantity))
+			//console.log(parseInt(objeto.cart[0].Quantity))
 			cart=objeto
 			for(var i=0; i<objeto.cart.length;i++)
 			{
 				
 				var j=i
+				const placeholder="https://hiperpharma.com/placeholder.png"
 				$.ajax({
 					url: 'getProduct',
 					type: 'GET',
         			data: { id: objeto.cart[i].Product},
 					success: function(respuesta) {
-						console.log("Hola: "+respuesta);
+						console.log("imagen: "+respuesta.imagen+" - "+respuesta.name)
 						var total=formatCurrency("es-CO", "COP", 0, parseInt(respuesta.price)*parseInt(objeto.cart[j].Quantity));
 						var appe=document.getElementById("appe")
-						$(appe).find('tbody').append('<tr><td><div class="thumb_cart"><img src="'+
-							respuesta.image+'" data-src="img/products/shoes/1.jpg" class="lazy" alt="Image"></div><span class="item_cart">'+
+						if(respuesta.image==null)
+						{
+							respuesta.image="/placeholder.png"
+						}
+						$(appe).find('tbody').append('<tr><td><div class="thumb_cart"><img  src="'+
+							respuesta.image+'" data-src="'+respuesta.image+'" class="lazy"'+
+							' onError="this.onerror=null;this.src="'+respuesta+'" alt="Image"></div><span class="item_cart">'+
 							respuesta.name+'</span></td><td><strong>'+respuesta.price2+
 								'</strong></td><td><div class="numbers-row"><input type="text" value="'+objeto.cart[j].Quantity+'" id="quantity_'+j+'" class="qty2" name="quantity_1"><div class="inc button_inc">+</div><div class="dec button_inc">-</div></div></td><td><strong>'+
 									total+'</strong></td><td class="options"><a href="#"><i class="ti-trash"></i></a></td></tr>');
