@@ -65,18 +65,17 @@ class ProductController {
         const axios = use('axios');        
         axios.get('https://hiperpharma.com/'+product.id+'.png')
           .then(function (response) {
-            console.log("SI")
+            
             product.image="https://hiperpharma.com/"+product.id+".png"
             product2.image="https://hiperpharma.com/"+product.id+".png"
           })
           .catch(function (error) {
-            console.log("NO")
+            
             product.image="https://hiperpharma.com/placeholder.png"
             product2.imagen="hola"
-            console.log(product2.image)
+            
           })
-          //console.log(product.image)
-          console.log(product2)
+          
           
           
           

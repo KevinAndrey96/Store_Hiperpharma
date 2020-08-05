@@ -279,7 +279,7 @@ console.log("Carrito: "+localStorage.getItem('Pcart'))
 				<div class="col-md-7">
 					<div class="item_panel">
 						<figure>
-							<img src="../img/products/product_placeholder_square_small.jpg" data-src="{{product.image}}" class="lazy" alt="">
+						<img src="{{product.image}}" data-src="{{product.image}}" onError="this.onerror=null;this.src='{{ assetsUrl('placeholder.png') }}';" class="lazy" alt="">
 						</figure>
 					<h4>{{product.name}}</h4>
 						<div class="price_panel"><span class="new_price">{{product.price}}</span></div>
