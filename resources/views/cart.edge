@@ -1,6 +1,10 @@
 @layout('layouts.principal')
 @section('main')
 <script>
+	function total()
+	{
+		
+	}
 	function eliminar(index)
 	{
 		alert("Eliminando: "+index)
@@ -13,7 +17,8 @@
 			
 			cart=objeto
 			console.log(JSON.stringify(cart))
-			
+			var subtotal=0
+			var domicilio=0
 			//for(var i=0; i<objeto.cart.length;i++)
 			objeto.cart.forEach(async (x,i) =>
 			{
@@ -23,14 +28,13 @@
 					
 					respuesta=respuesta.data
 
-					console.log(respuesta)
 					var total=formatCurrency("es-CO", "COP", 0, parseInt(respuesta.price)*parseInt(objeto.cart[j].Quantity));
 					var appe=document.getElementById("tabody")
 					if(respuesta.image==null)
 					{
 						respuesta.image="/placeholder.png"
 					}
-					console.log("quantity id ="+i)
+					
 					$(appe).after('<tr><td><div class="thumb_cart"><img  src="'+
 						respuesta.image+'" data-src="'+respuesta.image+'" class="lazy"'+
 						' alt="'+respuesta.name+'"></div><span class="item_cart">'+
@@ -40,14 +44,17 @@
 								'<div class="inc button_inc">+</div><div class="dec button_inc">-</div></div></td><td><strong>'+
 								total+'</strong></td><td class="options"><a href="#"><i class="ti-trash" onclick="eliminar('+i+')">'+
 									'</i></a></td></tr>');
+					subtotal+=respuesta.price*objeto.cart[i].Quantity
 				}catch(error2)
 				{
 					console.log("error2: "+error2)
 				}
-						
+				document.getElementById("subtotal").innerHTML=formatCurrency("es-CO", "COP", 0,subtotal)
+				document.getElementById("domicilio").innerHTML=formatCurrency("es-CO", "COP", 0,domicilio)
+				document.getElementById("total").innerHTML=formatCurrency("es-CO", "COP", 0,subtotal+domicilio)
 				
 			});
-		}catch(error)
+		}catch(error)//Si no hay productos redirige al index
 		{
 			window.location.href="/"
 		}
@@ -112,13 +119,13 @@
 				<div class="col-xl-4 col-lg-4 col-md-6">
 			<ul>
 				<li>
-					<span>Subtotal</span> $14.000
+					<span>Subtotal</span> <p id="subtotal">$0</p>
 				</li>
 				<li>
-					<span>Domicilio</span> $7.000
+					<span>Domicilio</span> <p id="domicilio">$0</p>
 				</li>
 				<li>
-					<span>Total</span> $21.000
+					<span>Total</span> <p id="total">$0</p>
 				</li>
 			</ul>
 			<a href="cart-2.html" class="btn_1 full-width cart">Proceder a pago</a>
