@@ -82,6 +82,39 @@ class ProductController {
         return product
       }
       
+      async checkout({request, response, view})
+      {
+        var cart=request.input("CART")
+        cart=JSON.parse(cart)
+        console.log("llegó "+cart.cart)
+        var products=[]
+        var total=0
+        for(const cart2 of cart.cart)
+        {
+          const product=await Product.findOrFail(parseInt(cart2.Product))
+          var carrito={}
+          carrito.id=product.id
+          carrito.name=product.name
+          carrito.code=product.code
+          carrito.quantity=cart2.Quantity
+          carrito.price=parseInt(carrito.quantity)*parseInt(product.price)
+          carrito.prettyprice=this.formatCurrency("es-CO", "COP", 0, carrito.price)
+          total=total+parseInt(carrito.price)
+          products.push(carrito)
+          console.log(product)
+        }
+        var prettyprices={}
+        prettyprices.subtotal=this.formatCurrency("es-CO", "COP", 0,total)
+        prettyprices.shipping=this.formatCurrency("es-CO", "COP", 0, 0)
+        prettyprices.total=this.formatCurrency("es-CO", "COP", 0,total+0)
+
+        var prices={}
+        prices.subtotal=prices.subtotal+total
+        prices.shipping= 0
+        prices.total=prices.subtotal+prices.shipping
+        
+        return view.render("checkout", {cart: products, prices: prices, prettyprices:prettyprices});
+      }
 
 }
 

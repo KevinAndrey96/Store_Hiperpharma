@@ -1,10 +1,6 @@
 @layout('layouts.principal')
 @section('main')
 <script>
-	function total()
-	{
-		
-	}
 	function eliminar(index)
 	{
 		alert("Eliminando: "+index)
@@ -52,6 +48,9 @@
 				document.getElementById("subtotal").innerHTML=formatCurrency("es-CO", "COP", 0,subtotal)
 				document.getElementById("domicilio").innerHTML=formatCurrency("es-CO", "COP", 0,domicilio)
 				document.getElementById("total").innerHTML=formatCurrency("es-CO", "COP", 0,subtotal+domicilio)
+				document.getElementById("CART").value=JSON.stringify(objeto)
+				
+
 				
 			});
 		}catch(error)//Si no hay productos redirige al index
@@ -128,7 +127,11 @@
 					<span>Total</span> <p id="total">$0</p>
 				</li>
 			</ul>
-			<a href="cart-2.html" class="btn_1 full-width cart">Proceder a pago</a>
+			<form method="POST" action="/checkout">
+				{{ csrfField() }}
+				<input type="hidden" name="CART" id="CART" value="">
+				<input type="submit" class="btn_1 full-width cart" value="Proceder a pago">
+			</form>		
 					</div>
 				</div>
 			</div>

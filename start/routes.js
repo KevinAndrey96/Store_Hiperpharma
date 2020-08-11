@@ -19,18 +19,15 @@ const Route = use('Route')
 //Route.on('/').render('index')
 Route.get('/','IndexController.index')
 Route.get('categories','IndexController.categories')
-
-Route.get('checkout', ({ view }) => {
-    return view.render('checkout')
-})
 /*Route.get('product_detail/:id', ({ view }) => {
     return view.render('product_detail')
 })*/
 Route.get('product_detail/:id','ProductController.index')
 Route.get('products_list/:id','ProductController.bycat')
 Route.get('cart','ProductController.cart')
+Route.post('checkout','ProductController.checkout')
 Route.get('getProduct','ProductController.get')
 
-Route.get('order_completed', ({ view }) => {
+Route.get('confirm', ({ view }) => {
     return view.render('order_completed')
 }) 
