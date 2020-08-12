@@ -15,6 +15,7 @@
 			
 	</div>
 	<!-- /page_header -->
+	<form method="POST" action="/pay">
 			<div class="row">
 				<div class="col-lg-6 col-md-6">
 					<div class="step first">
@@ -299,7 +300,7 @@
 							
 							<!-- /row -->
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="Teléfono">
+								<input type="text" class="form-control" name="PHONE" placeholder="Teléfono">
 							</div>
 						</div>
 						<!-- /tab_1 -->
@@ -314,6 +315,8 @@
 					<div class="step last">
 						<h3>2. Resumen de compra</h3>
 					<div class="box_general summary">
+						<input type="hidden" value="{{originalcart}}" name="CART">
+						{{ csrfField() }}
 						<ul>
 							@each(product in cart)
 						<li class="clearfix"><em>{{product.quantity}}x [{{product.code}}] {{product.name}}</em>  <span>{{product.prettyprice}}</span></li>
@@ -332,13 +335,14 @@
 								</label>
 							</div>
 						
-						<a href="/confirm" class="btn_1 full-width">Confirmar y pagar</a>
+						<input type="submit" class="btn_1 full-width" value="Confirmar y pagar">
 					</div>
 					<!-- /box_general -->
 					</div>
 					<!-- /step -->
 				</div>
 			</div>
+	</form>
 			<!-- /row -->
 		</div>
 		<!-- /container -->

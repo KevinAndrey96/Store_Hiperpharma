@@ -1,7 +1,9 @@
 'use strict'
 const Product = use('App/Models/Product')
+const Client = use('App/Models/Client')
 const Category = use('App/Models/Category')
-const { raw } = require('objection');
+const Order = use('App/Models/Order')
+const OrderProduct = use('App/Models/OrderProduct')
 
 class ProductController {
     
@@ -85,8 +87,8 @@ class ProductController {
       async checkout({request, response, view})
       {
         var cart=request.input("CART")
+        const originalcart=cart
         cart=JSON.parse(cart)
-        console.log("llegó "+cart.cart)
         var products=[]
         var total=0
         for(const cart2 of cart.cart)
@@ -113,9 +115,67 @@ class ProductController {
         prices.shipping= 0
         prices.total=prices.subtotal+prices.shipping
         
-        return view.render("checkout", {cart: products, prices: prices, prettyprices:prettyprices});
+        return view.render("checkout", {cart: products, prices: prices, prettyprices:prettyprices, originalcart: originalcart});
       }
+      async pay({request, response, view})
+      {
+        //registrar al cliente si no existe
+        //si existe actualizar sus datos
+        //registrar la orden en la bd
 
+        //Recibo datos de cliente y datos de la orden
+        const email=request.input("EMAIL")
+        
+        var client=await Client.findBy("email",email)
+        if(typeof client.id === 'undefined')
+        {
+          //Cliente no existe y pasa a ser creado
+          var client2 = new Client()
+          client2.name=request.input("NAME")
+          client2.email=email
+          client2.phone=request.input("PHONE")
+          client2.address=request.input("ADDRESS")
+          client2.city=request.input("CITY")
+          client2.country=request.input("COUNTRY")
+          client2.save()
+          console.log("Creado cliente nuevo")
+          
+        }else
+        {
+          //Cliente existe y se actualizan sus valores
+          var client2 = await Client.find(client.id)
+          client2.name=request.input("NAME")
+          client2.phone=request.input("PHONE")
+          client2.address=request.input("ADDRESS")
+          client2.city=request.input("CITY")
+          client2.country=request.input("COUNTRY")
+          client2.save()
+          console.log("Actualizando cliente")
+        }
+
+        var cart=request.input("CART")
+        cart=JSON.parse(cart)
+        var products=[]
+        var total=0
+
+        const order= new Order()
+        order.client_id=client.id
+        order.save()
+        console.log("Creada Orden")
+        for(const cart2 of cart.cart)
+        {
+          const orderProduct=new OrderProduct()
+          const product=await Product.findOrFail(parseInt(cart2.Product))
+          orderProduct.order_id=order.id
+          orderProduct.product_id=product.id
+          orderProduct.quantity=cart2.quantity
+          orderProduct.save()
+          console.log("Agregado producto a Orden")
+        }
+
+        console.log("Proceso completo")
+        return view.render('order_completed')
+      }
 }
 
 module.exports = ProductController
