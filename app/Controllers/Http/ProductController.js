@@ -103,7 +103,6 @@ class ProductController {
           carrito.prettyprice=this.formatCurrency("es-CO", "COP", 0, carrito.price)
           total=total+parseInt(carrito.price)
           products.push(carrito)
-          console.log(product)
         }
         var prettyprices={}
         prettyprices.subtotal=this.formatCurrency("es-CO", "COP", 0,total)
@@ -126,31 +125,29 @@ class ProductController {
         //Recibo datos de cliente y datos de la orden
         const email=request.input("EMAIL")
         
-        var client=await Client.findBy("email",email)
-        if(typeof client.id === 'undefined')
-        {
-          //Cliente no existe y pasa a ser creado
-          var client2 = new Client()
-          client2.name=request.input("NAME")
-          client2.email=email
-          client2.phone=request.input("PHONE")
-          client2.address=request.input("ADDRESS")
-          client2.city=request.input("CITY")
-          client2.country=request.input("COUNTRY")
-          client2.save()
-          console.log("Creado cliente nuevo")
-          
-        }else
-        {
+        try{
           //Cliente existe y se actualizan sus valores
+          var client=await Client.findBy("email",email)
           var client2 = await Client.find(client.id)
           client2.name=request.input("NAME")
           client2.phone=request.input("PHONE")
           client2.address=request.input("ADDRESS")
           client2.city=request.input("CITY")
           client2.country=request.input("COUNTRY")
-          client2.save()
+          await client2.save()
           console.log("Actualizando cliente")
+        }catch(e)
+        {
+          //Cliente no existe y pasa a ser creado
+          var client = await new Client()
+          client.name=request.input("NAME")
+          client.email=email
+          client.phone=request.input("PHONE")
+          client.address=request.input("ADDRESS")
+          client.city=request.input("CITY")
+          client.country=request.input("COUNTRY")
+          await client.save()
+          console.log("Creado cliente nuevo")          
         }
 
         var cart=request.input("CART")
@@ -158,18 +155,18 @@ class ProductController {
         var products=[]
         var total=0
 
-        const order= new Order()
+        const order= await new Order()
         order.client_id=client.id
-        order.save()
+        await order.save()
         console.log("Creada Orden")
         for(const cart2 of cart.cart)
         {
-          const orderProduct=new OrderProduct()
+          const orderProduct=await new OrderProduct()
           const product=await Product.findOrFail(parseInt(cart2.Product))
           orderProduct.order_id=order.id
           orderProduct.product_id=product.id
-          orderProduct.quantity=cart2.quantity
-          orderProduct.save()
+          orderProduct.quantity=cart2.Quantity
+          await orderProduct.save()
           console.log("Agregado producto a Orden")
         }
 

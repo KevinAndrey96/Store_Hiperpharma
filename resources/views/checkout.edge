@@ -1,8 +1,29 @@
 @layout('layouts.principal')
 @section('main')
-	<main class="bg_gray">
-	
-		
+<script>
+async function getClient()
+{
+	axios.get('/getClient', {
+    params: {
+      email: document.getElementById("EMAIL").value
+    }
+	})
+	.then(function (response) {
+		document.getElementById("NAME").value=response.data.name
+		document.getElementById("PHONE").value=response.data.phone
+		document.getElementById("ADDRESS").value=response.data.address
+		document.getElementById("CITY").value=response.data.city
+		document.getElementById("COUNTRY").value=response.data.country
+	})
+	.catch(function (error) {
+		alert("Usuario no registrado, rellene todos los datos y complete el checkout para continuar")
+	})
+	.then(function () {
+		// always executed
+	});
+}
+</script>
+	<main class="bg_gray">		
 	<div class="container margin_30">
 		<div class="page_header">
 			<div class="breadcrumbs">
@@ -28,28 +49,28 @@
 					<div class="tab-content checkout">
 						<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 							<div class="form-group">
-								<input type="email" class="form-control" name="EMAIL" placeholder="Email">
+								<input required type="email" class="form-control" id="EMAIL" name="EMAIL" placeholder="Email">
 							</div>
 							<div class="form-group">
-								<input type="button" value="Verificar correo" class="btn_1 full-width">
+								<input type="button" value="Verificar correo" onclick="getClient()" class="btn_1 full-width">
 							</div>
 							<hr>
 							<div class="form-group">
 								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Nombre completo" name="NAME">
+									<input required type="text" class="form-control" placeholder="Nombre completo" id="NAME" name="NAME">
 								</div>
 							</div>
 							<!-- /row -->
 							<div class="form-group">
-								<input type="text" class="form-control" name="ADDRESS" placeholder="Dirección">
+								<input required type="text" class="form-control" id="ADDRESS" name="ADDRESS" placeholder="Dirección">
 							</div>
 							<div class="row no-gutters">
 								<div class="col-6 form-group pr-1">
-									<input type="text" class="form-control" name="CITY" placeholder="Ciudad">
+									<input required type="text" class="form-control" id="CITY" name="CITY" placeholder="Ciudad">
 								</div>
 								<div class="col-6 form-group pl-1">
 									<div class="custom-select-form">
-									<select name="COUNTRY" class="wide add_bottom_15"> 
+									<select required name="COUNTRY" id="COUNTRY" class="wide add_bottom_15"> 
 											<option value="Colombia" selected="selected">Colombia</option> 
 											<option value="United States">United States</option> 
 											<option value="United Kingdom">United Kingdom</option> 
@@ -300,7 +321,7 @@
 							
 							<!-- /row -->
 							<div class="form-group">
-								<input type="text" class="form-control" name="PHONE" placeholder="Teléfono">
+								<input required type="text" class="form-control" name="PHONE" id="PHONE" placeholder="Teléfono">
 							</div>
 						</div>
 						<!-- /tab_1 -->
@@ -330,7 +351,7 @@
 						<div class="total clearfix">TOTAL <span>{{prettyprices.total}}</span></div>
 						<div class="form-group">
 								<label class="container_check">Acepto los terminos y condiciones
-								  <input type="checkbox">
+								  <input type="checkbox" required>
 								  <span class="checkmark"></span>
 								</label>
 							</div>
