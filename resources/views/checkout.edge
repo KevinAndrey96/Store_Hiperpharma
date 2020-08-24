@@ -9,11 +9,18 @@ async function getClient()
     }
 	})
 	.then(function (response) {
-		document.getElementById("NAME").value=response.data.name
-		document.getElementById("PHONE").value=response.data.phone
-		document.getElementById("ADDRESS").value=response.data.address
-		document.getElementById("CITY").value=response.data.city
-		document.getElementById("COUNTRY").value=response.data.country
+		console.log(response)
+		if(response.status==204)
+		{
+			alert("Usuario no registrado, rellene todos los datos y complete el checkout para continuar")			
+		}else
+		{
+			document.getElementById("NAME").value=response.data.name
+			document.getElementById("PHONE").value=response.data.phone
+			document.getElementById("ADDRESS").value=response.data.address
+			document.getElementById("CITY").value=response.data.city
+			document.getElementById("COUNTRY").value=response.data.country
+		}
 	})
 	.catch(function (error) {
 		alert("Usuario no registrado, rellene todos los datos y complete el checkout para continuar")

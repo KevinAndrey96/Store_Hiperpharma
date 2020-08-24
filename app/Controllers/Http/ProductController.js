@@ -157,6 +157,8 @@ class ProductController {
 
         const order= await new Order()
         order.client_id=client.id
+        order.status="pending"
+        order.value=0
         await order.save()
         console.log("Creada Orden")
         for(const cart2 of cart.cart)
@@ -166,9 +168,11 @@ class ProductController {
           orderProduct.order_id=order.id
           orderProduct.product_id=product.id
           orderProduct.quantity=cart2.Quantity
+          order.value=parseInt(order.value)+parseInt(product.price)*parseInt(cart2.Quantity)
           await orderProduct.save()
           console.log("Agregado producto a Orden")
         }
+        order.save()
 
         console.log("Proceso completo")
         return view.render('order_completed')
