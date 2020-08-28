@@ -27,6 +27,7 @@ Route.get('products_list/:id','ProductController.bycat')
 Route.get('cart','ProductController.cart')
 Route.post('checkout','ProductController.checkout')
 Route.post('pay','ProductController.pay')
+Route.get('search','ProductController.search')
 Route.get('getProduct','ProductController.get')
 Route.get('getClient','ClientController.get')
 

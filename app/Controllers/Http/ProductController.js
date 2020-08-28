@@ -33,6 +33,7 @@ class ProductController {
       {
         //console.log(request.params.id)
         const category = await Category.find(params.id)
+        const categories = await Category.all()
         const products = await Product.query().where("category","=",category.name).fetch()
         var products2=[]
         for(const product of products.toJSON())
@@ -40,7 +41,40 @@ class ProductController {
             product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
             products2.push(product)
         }
-        return view.render('products_list', { products: products2, category: category })
+        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+      }
+      async search({request, response,params, view})
+      {
+        console.log(request.get())
+        const req=request.get()
+        const category= await Category.findOrFail(req.category)
+        console.log(category.name)
+        var products
+        switch (parseInt(req.prices)) {
+          case 1:
+            products=Product.query().where('category', category.name).whereBetween('price',[0,10000]).fetch()
+            console.log("Switch 1")
+            break;
+          case 2:
+            products=Product.query().where('category', category.name).whereBetween('price',[10000,30000]).fetch()
+            console.log("Switch 2")
+            break;
+          case 3:
+            products=Product.query().where('category', category.name).whereBetween('price',[30000,50000]).fetch()
+            console.log("Switch 3")
+            break;
+          case 4:
+            products=Product.query().where('category', category.name).whereBetween('price',">",50000).fetch()
+            console.log("Switch 4")
+            break;
+          default:
+            products=Product.all()
+            console.log("Default")
+            break;
+        }
+        
+        return products
+        //return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
       }
       
       async cart({request, response, view})
@@ -65,7 +99,7 @@ class ProductController {
         product2.long_description=product.long_description
 
         const axios = use('axios');        
-        axios.get('https://hiperpharma.com/'+product.id+'.png')
+        await axios.get('https://hiperpharma.com/'+product.id+'.png')
         .then(function (response) {
             
             product.image="https://hiperpharma.com/"+product.id+".png"
