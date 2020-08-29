@@ -17,9 +17,12 @@ class ProductController {
         product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
 
         const relateds= await Product.query().where("category","=",product.category).where("id","!=",product.id).fetch()
+
+        const categories=await Category.all()
+        
   
-        //console.log(relateds)
-        return view.render("product_detail", {product, relateds: relateds.toJSON()});
+        console.log(product)
+        return view.render("product_detail", {product, relateds: relateds.toJSON(), categories: categories.toJSON()});
       }
       formatCurrency (locales, currency, fractionDigits, number) {
         var formatted = new Intl.NumberFormat(locales, {
@@ -46,35 +49,77 @@ class ProductController {
       async search({request, response,params, view})
       {
         console.log(request.get())
-        const req=request.get()
-        const category= await Category.findOrFail(req.category)
-        console.log(category.name)
-        var products
-        switch (parseInt(req.prices)) {
-          case 1:
-            products=Product.query().where('category', category.name).whereBetween('price',[0,10000]).fetch()
-            console.log("Switch 1")
+        var sortparam="asc"
+        var sortname="name"
+        if(request.get().sort)
+        {
+          switch (request.get().sort) {
+            case "pricedesc":
+              sortparam="desc"
+              sortname="price"
             break;
-          case 2:
-            products=Product.query().where('category', category.name).whereBetween('price',[10000,30000]).fetch()
-            console.log("Switch 2")
+            case "priceasc":
+              sortparam="asc"
+              sortname="price"
             break;
-          case 3:
-            products=Product.query().where('category', category.name).whereBetween('price',[30000,50000]).fetch()
-            console.log("Switch 3")
+            case "alphadesc":
+              sortparam="desc"
+              sortname="name"
             break;
-          case 4:
-            products=Product.query().where('category', category.name).whereBetween('price',">",50000).fetch()
-            console.log("Switch 4")
+            case "alphaasc":
+              sortparam="asc"
+              sortname="name"
             break;
+        
           default:
-            products=Product.all()
-            console.log("Default")
+            sortparam="asc"
+            sortname="name"
             break;
         }
+        }
         
-        return products
-        //return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+
+        var products=[]
+        var products2=[]
+        var category=[]
+        if(request.get().name)//Busqueda por nombre
+        {
+          products= await Product.query().where("name","LIKE","%"+request.get().name+"%").orderBy(sortname,sortparam).fetch()
+          category.name="Busqueda"
+        }else//Busqueda por categoria y precio
+        {
+          if(request.get().category)
+          {
+            category= await Category.find(request.get().category)
+            switch (parseInt(request.get().prices)) {
+              case 1:
+                products=await Product.query().where('category', category.name).whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
+                break;
+              case 2:
+                products=await Product.query().where('category', category.name).whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
+                break;
+              case 3:
+                products=await Product.query().where('category', category.name).whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
+                break;
+              case 4:
+                products=await Product.query().where('category', category.name).whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
+                break;
+              default:
+                products=Product.all()
+                break;
+            }
+          }
+          
+        }
+        
+        for(const product of products.toJSON())
+        {
+            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
+            products2.push(product)
+        }
+        
+        const categories = await Category.all()
+        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
       }
       
       async cart({request, response, view})

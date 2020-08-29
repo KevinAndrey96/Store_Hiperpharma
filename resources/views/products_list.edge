@@ -1,5 +1,6 @@
 @layout('layouts.principal')
 @section('main')
+<form method="GET" action="/search">
 	<main>
 		<div class="top_banner">
 			<div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.3)">
@@ -24,11 +25,10 @@
 					<li>
 						<div class="sort_select">
 							<select name="sort" id="sort">
-                                    <option selected="selected">Ordenar por</option>
-                                    <option value="rating">Menor precio</option>
-                                    <option value="date">Mayor precio</option>
-                                    <option value="price">Alfabético A-Z</option>
-                                    <option value="price-desc">Alfabético Z-A </option>
+                                    <option value="priceasc">Menor precio</option>
+                                    <option value="pricedesc">Mayor precio</option>
+                                    <option value="alphaasc">Alfabético A-Z</option>
+                                    <option value="alphadesc">Alfabético Z-A </option>
 							</select>
 						</div>
 					</li>
@@ -48,7 +48,7 @@
 			<div class="row">
 				
 				<aside class="col-lg-3" id="sidebar_fixed">
-					<form method="GET" action="/search">
+					
 				    <div class="filter_col">
 				        <div class="inner_bt"><a href="#" class="open_filters"><i class="ti-close"></i></a></div>
 				        <div class="filter_type version_2">
@@ -58,7 +58,7 @@
 									@each(cat in categories)
 				                    <li>
 				                        <label class="container_check">{{cat.name}}
-				                            <input type="radio" name="category" value="{{cat.id}}">
+				                            <input required type="radio" name="category" value="{{cat.id}}">
 				                            <span class="checkmark"></span>
 				                        </label>
 									</li>
@@ -79,25 +79,25 @@
 				                <ul>
 				                    <li>
 				                        <label class="container_check">$0 — $10.000
-				                            <input type="radio" name="prices" value="1">
+				                            <input required type="radio" name="prices" value="1">
 				                            <span class="checkmark"></span>
 				                        </label>
 				                    </li>
 				                    <li>
 				                        <label class="container_check">$10.000 — $30.000
-				                            <input type="radio" name="prices" value="2">
+				                            <input required type="radio" name="prices" value="2">
 				                            <span class="checkmark"></span>
 				                        </label>
 				                    </li>
 				                    <li>
 				                        <label class="container_check">$30.000 — $50.000
-				                            <input type="radio" name="prices" value="3">
+				                            <input required type="radio" name="prices" value="3">
 				                            <span class="checkmark"></span>
 				                        </label>
 				                    </li>
 				                    <li>
 				                        <label class="container_check">$50.000 — Más
-				                            <input type="radio" name="prices" value="4">
+				                            <input required type="radio" name="prices" value="4">
 				                            <span class="checkmark"></span>
 				                        </label>
 				                    </li>
@@ -109,7 +109,7 @@
 				            <input type="submit" class="btn_1" value="Filtrar"> <a href="#0" class="btn_1 gray">Borrar Filtros</a>
 				        </div>
 					</div>
-				</form>
+				
 				</aside>
 				
 				<!-- /col -->
@@ -140,7 +140,7 @@
 					</div>
 					<!-- /row -->
 					<div class="pagination__wrapper">
-						<ul class="pagination">
+						<!--<ul class="pagination">
 							<li><a href="#0" class="prev" title="previous page">&#10094;</a></li>
 							<li>
 								<a href="#0" class="active">1</a>
@@ -155,7 +155,7 @@
 								<a href="#0">4</a>
 							</li>
 							<li><a href="#0" class="next" title="next page">&#10095;</a></li>
-						</ul>
+						</ul>-->
 					</div>
 				</div>
 				<!-- /col -->
@@ -166,4 +166,5 @@
 		<!-- /container -->
 	</main>
 	<!-- /main -->
+</form>
 @endsection

@@ -11,11 +11,8 @@
     <title>Hiperpharma | Inicio</title>
 
     <!-- Favicons-->
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+    <link rel="shortcut icon" href="{{assetsUrl('favicon.png')}}">
+	<link rel="icon" href="{{assetsUrl('favicon.png')}}" type="image/x-icon">
 	
     <!-- GOOGLE WEB FONT -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet">
@@ -214,8 +211,10 @@
 					</div>
 					<div class="col-xl-6 col-lg-7 col-md-6 d-none d-md-block">
 						<div class="custom-search-input">
-							<input type="text" placeholder="¿Qué estás buscando?">
-							<button type="submit"><i class="header-icon_search_custom"></i></button>
+							<form method="GET" action="/search">
+								<input type="text" name="name" placeholder="¿Qué estás buscando?">
+								<button type="submit"><i class="header-icon_search_custom"></i></button>
+							</form>
 						</div>
 					</div>
 					<div class="col-xl-3 col-lg-2 col-md-3">
