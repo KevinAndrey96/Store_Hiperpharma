@@ -12,7 +12,7 @@ class IndexController {
       }
     async index({request, response, view})
     {
-        const cats1= await Product.query().where("category","=","Medicamentos").fetch()
+        const cats1= await Product.query().where("category","=","ENJUAGES-BUCALES").fetch()
         var rescat1=[]
         for(const product of cats1.toJSON())
         {
