@@ -221,7 +221,8 @@
 						<ul class="top_tools">
 							<li>
 								<div class="dropdown dropdown-cart">
-									<a href="/cart" class="cart_bt"><strong></strong></a>
+									<a href="/cart" class=""><img src="img/icon_cart.svg" width="30px" height="30px" alt=""></a>
+									
 									<div class="dropdown-menu">
 										<div class="total_drop">
 											<a href="/cart" class="btn_1 outline">Ver Carrito</a>
@@ -256,8 +257,10 @@
 				<!-- /row -->
 			</div>
 			<div class="search_mob_wp">
-				<input type="text" class="form-control" placeholder="¿Qué estás buscando?">
-				<input type="submit" class="btn_1 full-width" value="Buscar">
+				<form method="GET" action="/search">
+					<input type="text" name="name" class="form-control" placeholder="¿Qué estás buscando?">
+					<input type="submit" class="btn_1 full-width" value="Buscar">
+				</form>
 			</div>
 			<!-- /search_mobile -->
 		</div>
