@@ -55,7 +55,7 @@ class IndexController {
             product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
             rescat5.push(product)
         }
-
+        
         const categories= await Category.all()
         //console.log(rescat5)
 

@@ -37,7 +37,7 @@ class ProductController {
         //console.log(request.params.id)
         const category = await Category.find(params.id)
         const categories = await Category.all()
-        const products = await Product.query().where("category","=",category.name).fetch()
+        const products = await Product.query().where("father","=",category.name).fetch()
         var products2=[]
         for(const product of products.toJSON())
         {
@@ -46,6 +46,24 @@ class ProductController {
         }
         return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
       }
+
+      async bycatmenu({request, response,params, view})
+      {
+        //console.log(request.params.name.replace(/%20/g, ' '))
+        const products = await Product.query().where("category","LIKE",request.params.name.replace(/%20/g, ' ')).fetch()
+        var products2=[]
+        for(const product of products.toJSON())
+        {
+            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
+            products2.push(product)
+        }
+        const category = await Category.query().where("name", "LIKE", request.params.name.replace(/%20/g, ' ')).first();
+        //const category = await Category.find(params.id)
+        console.log(category)
+        const categories = await Category.all()
+        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+      }
+
       async search({request, response,params, view})
       {
         console.log(request.get())
@@ -240,6 +258,7 @@ class ProductController {
         order.value=0
         await order.save()
         console.log("Creada Orden")
+        var prods="";
         for(const cart2 of cart.cart)
         {
           const orderProduct=await new OrderProduct()
@@ -247,13 +266,50 @@ class ProductController {
           orderProduct.order_id=order.id
           orderProduct.product_id=product.id
           orderProduct.quantity=cart2.Quantity
+          prods+=product.name+": $"+product.price+" x"+orderProduct.quantity+" - "
           order.value=parseInt(order.value)+parseInt(product.price)*parseInt(cart2.Quantity)
           await orderProduct.save()
           console.log("Agregado producto a Orden")
         }
-        order.save()
+        prods+=" Total: $"+order.value
+        
+
+
 
         console.log("Proceso completo")
+        const axios = require('axios');
+        var FormData = require('form-data');
+
+        var bodyFormData = new FormData();
+        bodyFormData.append('userName', 'CLARITZA_MARIA-api');
+        bodyFormData.append('password', 'CLARITZA_MARIA');
+        bodyFormData.append('orderNumber', order.id);
+        bodyFormData.append('amount',  order.value+"00");
+        bodyFormData.append('returnUrl', "https://hiperpharma.com/pay");
+        bodyFormData.append('description', prods);
+
+        await axios({
+          method: 'post',
+          url: 'https://ecouat.credibanco.com/payment/rest/register.do',
+          data: bodyFormData,
+          headers: {
+            'content-type': `multipart/form-data; boundary=${bodyFormData._boundary}`,
+            }
+        })
+        .then(function (res) {
+          console.log("Pasarela");
+          order.gateway=res.data.orderId
+          order.save()
+          return response.redirect(res.data.formUrl)
+        })
+        .catch(function (error) {
+          console.log("Error"+error);
+          return response.redirect("https://hiperpharma.com")
+        });
+        //return view.render('order_completed')
+      }
+      async pay2({request, response, view})
+      {
         return view.render('order_completed')
       }
 }
