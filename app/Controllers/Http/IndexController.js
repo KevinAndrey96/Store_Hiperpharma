@@ -12,7 +12,7 @@ class IndexController {
       }
     async index({request, response, view})
     {
-        const cats1= await Product.query().where("category","=","Medicamentos").fetch()
+        const cats1= await Product.query().where("category","=","ENJUAGES-BUCALES").orWhere("category","LIKE","CREMAS DENTALES NI%").orWhere("category","=","ORTODONCIA").fetch()
         var rescat1=[]
         for(const product of cats1.toJSON())
         {
@@ -20,7 +20,7 @@ class IndexController {
             rescat1.push(product)
         }
         //
-        const cats2= await Product.query().where("category","=","Cosmetica").fetch()
+        const cats2= await Product.query().where("category","=","JABONES Y GEL ANTIBACTERIAL").orWhere("category","LIKE","AFEITADA Y DEPILACI%").orWhere("category","LIKE","TOALLITAS-PA").fetch()
         var rescat2=[]
         
         for(const product of cats2.toJSON())
@@ -29,7 +29,7 @@ class IndexController {
             rescat2.push(product)
         }
         //
-        const cats3= await Product.query().where("category","=","Cuidado para el cabello").fetch()
+        const cats3= await Product.query().where("category","=","JABONES-GELES").orWhere("category","=","REPELENTES").fetch()
         var rescat3=[]
         
         for(const product of cats3.toJSON())
@@ -38,7 +38,7 @@ class IndexController {
             rescat3.push(product)
         }
         ////
-        const cats4= await Product.query().where("category","=","Cuidado para la piel").fetch()
+        const cats4= await Product.query().where("category","=","DESODORANTES").orWhere("category","=","SEDAS DENTALES").fetch()
         var rescat4=[]
         
         for(const product of cats4.toJSON())
@@ -47,7 +47,7 @@ class IndexController {
             rescat4.push(product)
         }
         ////
-        const cats5= await Product.query().where("category","=","Cuidado oral").fetch()
+        const cats5= await Product.query().where("category","=","BLANQUEADORES").orWhere("category","=","CUIDADO-PROTESIS").orWhere("category","=","CEPILLOS DENTALES ADULTOS").fetch() 
         var rescat5=[]
         
         for(const product of cats5.toJSON())
