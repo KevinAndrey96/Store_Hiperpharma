@@ -55,10 +55,10 @@
 				            <h4><a href="#filter_1" data-toggle="collapse" class="opened">Categorias</a></h4>
 				            <div class="collapse show" id="filter_1">
 				                <ul>
-									@each(cat in categories)
+									@each(cate in categories)
 				                    <li>
-				                        <label class="container_check">{{cat.name}}
-				                            <input required type="radio" name="category" value="{{cat.id}}">
+				                        <label class="container_check">{{cate}}
+				                            <input required type="radio" name="category" value="{{cate}}">
 				                            <span class="checkmark"></span>
 				                        </label>
 									</li>

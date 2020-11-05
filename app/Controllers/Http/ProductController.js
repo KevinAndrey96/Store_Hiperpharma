@@ -6,21 +6,11 @@ const Order = use('App/Models/Order')
 const OrderProduct = use('App/Models/OrderProduct')
 
 class ProductController {
-    
-    
-
     async index({ params, view }) {
-
-        
-
         const product = await Product.find(params.id);
         product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
-
         const relateds= await Product.query().where("category","=",product.category).where("id","!=",product.id).fetch()
-
         const categories=await Category.all()
-        
-  
         console.log(product)
         return view.render("product_detail", {product, relateds: relateds.toJSON(), categories: categories.toJSON()});
       }
@@ -38,13 +28,19 @@ class ProductController {
         const category = await Category.find(params.id)
         const categories = await Category.all()
         const products = await Product.query().where("father","=",category.name).fetch()
-        var products2=[]
+        
+        var products2 = []
+
+        var categories2 = await Product.query().pluck('father').groupBy('father')
         for(const product of products.toJSON())
         {
             product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
             products2.push(product)
+            
         }
-        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+        console.log(categories.toJSON());
+        console.log(categories2)
+        return view.render('products_list', { products: products2, category: category, categories: categories2 })
       }
 
       async bycatmenu({request, response,params, view})
@@ -61,7 +57,9 @@ class ProductController {
         //const category = await Category.find(params.id)
         console.log(category)
         const categories = await Category.all()
-        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+        
+        var categories2 = await Product.query().pluck('father').groupBy('father')
+        return view.render('products_list', { products: products2, category: category, categories: categories2 })
       }
 
       async search({request, response,params, view})
@@ -106,9 +104,12 @@ class ProductController {
           category.name="Busqueda"
         }else//Busqueda por categoria y precio
         {
-          if(request.get().category)
+          console.log("Precio")
+          products = await Product.query().where("father","=",request.get().category).fetch();
+          /*if(request.get().category)
           {
-            category= await Category.find(request.get().category)
+            //category= await Category.find(request.get().category)
+            category= await Category.where(""request.get().category)
             switch (parseInt(request.get().prices)) {
               case 1:
                 products=await Product.query().where('category', category.name).whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
@@ -126,7 +127,7 @@ class ProductController {
                 products=Product.all()
                 break;
             }
-          }
+          }*/
           
         }
         
@@ -136,8 +137,9 @@ class ProductController {
             products2.push(product)
         }
         
+        var categories2 = await Product.query().pluck('father').groupBy('father')
         const categories = await Category.all()
-        return view.render('products_list', { products: products2, category: category, categories: categories.toJSON() })
+        return view.render('products_list', { products: products2, category: category, categories: categories2 })
       }
       
       async cart({request, response, view})
