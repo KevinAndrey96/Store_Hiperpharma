@@ -2454,6 +2454,7 @@ header .main_nav .custom-search-input {
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   border-radius: 3px;
+  left: 40%;
 }
 header .main_nav .custom-search-input input[type='text'] {
   width: 100%;
