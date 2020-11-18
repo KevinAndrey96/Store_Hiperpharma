@@ -275,10 +275,16 @@ class ProductController {
         }
         prods+=" Total: $"+order.value
         
-
-
-
         console.log("Proceso completo")
+
+        const Mail = use('Mail')
+        await Mail.send('emails.welcome', user.toJSON(), (message) => {
+          message
+            .to("kaherreras@unal.edu.co")
+            .from('<from-email>')
+            .subject('Welcome to yardstick')
+        })
+
         const axios = require('axios');
         var FormData = require('form-data');
 
@@ -315,5 +321,4 @@ class ProductController {
         return view.render('order_completed')
       }
 }
-
 module.exports = ProductController
