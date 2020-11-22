@@ -64,9 +64,13 @@ class ProductController {
 
       async search({request, response,params, view})
       {
-        console.log(request.get())
+        var products=[]
+        var products2=[]
+        var category=[]
+      
         var sortparam="asc"
         var sortname="name"
+        
         if(request.get().sort)
         {
           switch (request.get().sort) {
@@ -85,68 +89,90 @@ class ProductController {
             case "alphaasc":
               sortparam="asc"
               sortname="name"
-            break;
-        
-          default:
-            sortparam="asc"
-            sortname="name"
-            break;
+            break;   
+            default:
+              sortparam="asc"
+              sortname="name"
+              break;
+          }
+          products= await Product.query().orderBy(sortname,sortparam).fetch()
         }
-        }
-        
 
-        var products=[]
-        var products2=[]
-        var category=[]
         if(request.get().name)//Busqueda por nombre
         {
           products= await Product.query().where("name","LIKE","%"+request.get().name+"%").orderBy(sortname,sortparam).fetch()
           category.name="Busqueda"
+          
         }else//Busqueda por categoria y precio
         {
-          console.log("Precio")
-          products = await Product.query().where("father","=",request.get().category).fetch();
-          /*if(request.get().category)
+          (request.get().prices === undefined) ? request.get().prices = 0 : request.get().prices = request.get().prices;
+          if(request.get().prices && request.get().category)
           {
-            //category= await Category.find(request.get().category)
-            category= await Category.where(""request.get().category)
             switch (parseInt(request.get().prices)) {
               case 1:
-                products=await Product.query().where('category', category.name).whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
+                products=await Product.query().where('category', request.get().category).whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
                 break;
               case 2:
-                products=await Product.query().where('category', category.name).whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
+                products=await Product.query().where('category', request.get().category).whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
                 break;
               case 3:
-                products=await Product.query().where('category', category.name).whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
+                products=await Product.query().where('category', request.get().category).whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
                 break;
               case 4:
-                products=await Product.query().where('category', category.name).whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
+                products=await Product.query().where('category', request.get().category).whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
                 break;
               default:
-                products=Product.all()
+                products=await Product.query().where('category', request.get().category).orderBy(sortname, sortparam).fetch()
                 break;
             }
-          }*/
-          
+          }else
+          {
+            if(request.get().prices)
+            {
+              switch (parseInt(request.get().prices)) {
+                case 1:
+                  products=await Product.query().whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
+                  break;
+                case 2:
+                  products=await Product.query().whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
+                  break;
+                case 3:
+                  products=await Product.query().whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
+                  break;
+                case 4:
+                  products=await Product.query().whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
+                  break;
+                default:
+                  products=Product.all().fetch()
+                  break;
+              }
+            }
+            if(request.get().category)
+            {
+              products = await Product.query().where("category","like",request.get().category).fetch();
+            }
+          }
         }
-        
+        let father = "";
         for(const product of products.toJSON())
         {
-            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
-            products2.push(product)
+          father = product.father;
+          product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
+          products2.push(product)
         }
+
+
         
-        var categories2 = await Product.query().pluck('father').groupBy('father')
+        const categories2 = await Product.query().where("father",father).pluck('category').groupBy('category')
         const categories = await Category.all()
         return view.render('products_list', { products: products2, category: category, categories: categories2 })
       }
       
       async cart({request, response, view})
-      {
-        
+      {        
         return view.render("cart");
       }
+
       async get({request, response, params})
       {
         const id=request.input("id");
@@ -164,19 +190,18 @@ class ProductController {
         product2.long_description=product.long_description
 
         const axios = use('axios');        
-        await axios.get('https://hiperpharma.com/'+product.id+'.png')
-        .then(function (response) {
+        /*await axios.get(product.image)
+        .then( (response) => {
             
             product.image="https://hiperpharma.com/"+product.id+".png"
             product2.image="https://hiperpharma.com/"+product.id+".png"
-        })
-          .catch(function (error) {
+        }).catch((error) =>{
             
             product.image="https://hiperpharma.com/placeholder.png"
             product2.image="https://hiperpharma.com/placeholder.png"
             
           })
-          
+          */
           
           
           
@@ -278,11 +303,13 @@ class ProductController {
         console.log("Proceso completo")
 
         const Mail = use('Mail')
-        await Mail.send('emails.welcome', user.toJSON(), (message) => {
+        console.log(order.toJSON())
+        await Mail.send('emails.order', {order: order.toJSON(), prods: prods}, (message) => {
           message
-            .to("kaherreras@unal.edu.co")
-            .from('<from-email>')
-            .subject('Welcome to yardstick')
+            .to(email)
+            .from('no-reply@hiperpharma.com')
+            .subject('Confirmación de pedido')
+            console.log("Enviado Correo")
         })
 
         const axios = require('axios');

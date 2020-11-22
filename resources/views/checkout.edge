@@ -73,7 +73,10 @@ async function getClient()
 							</div>
 							<div class="row no-gutters">
 								<div class="col-6 form-group pr-1">
-									<input required type="text" class="form-control" id="CITY" name="CITY" placeholder="Ciudad">
+									<!--<input required type="text" class="form-control" id="CITY" name="CITY" placeholder="Ciudad">-->
+									<select name="CITY" id="CITY" class="form-control">
+										<option selected value="Bogotá D.C">Bogotá D.C</option>
+									</select>
 								</div>
 								<div class="col-6 form-group pl-1">
 									<div class="custom-select-form">
@@ -352,7 +355,7 @@ async function getClient()
 						</ul>
 						<ul>
 							<li class="clearfix"><em><strong>Subtotal</strong></em>  <span>{{prettyprices.subtotal}}</span></li>
-							<li class="clearfix"><em><strong>Shipping</strong></em> <span>{{prettyprices.shipping}}</span></li>
+							<li class="clearfix"><em><strong>Envío</strong></em> <span>{{prettyprices.shipping}}</span></li>
 							
 						</ul>
 						<div class="total clearfix">TOTAL <span>{{prettyprices.total}}</span></div>

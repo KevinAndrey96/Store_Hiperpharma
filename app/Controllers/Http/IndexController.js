@@ -57,9 +57,8 @@ class IndexController {
         }
         
         const categories= await Category.all()
-        //console.log(rescat5)
-
-
+        //console.log()
+        //return categories;
         return view.render("index",{cats1: rescat1,cats2: rescat2,cats3: rescat3,cats4: rescat4,cats5: rescat5, categories: categories.toJSON()})
     }
     async categories({request, response, view})
