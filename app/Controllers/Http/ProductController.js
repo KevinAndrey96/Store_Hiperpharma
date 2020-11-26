@@ -22,7 +22,7 @@ class ProductController {
         }).format(number);
         return formatted;
       }
-      async bycat({request, response,params, view})
+    /*  async bycat({request, response,params, view})
       {
         //console.log(request.params.id)
         const category = await Category.find(params.id)
@@ -41,27 +41,29 @@ class ProductController {
         console.log(categories.toJSON());
         console.log(categories2)
         return view.render('products_list', { products: products2, category: category, categories: categories2 })
-      }
-
+      }*/
+/*
       async bycatmenu({request, response,params, view})
       {
-        //console.log(request.params.name.replace(/%20/g, ' '))
         const products = await Product.query().where("category","LIKE",request.params.name.replace(/%20/g, ' ')).fetch()
         var products2=[]
+        let father;
         for(const product of products.toJSON())
         {
             product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
             products2.push(product)
+            father = product.father;
         }
         const category = await Category.query().where("name", "LIKE", request.params.name.replace(/%20/g, ' ')).first();
-        //const category = await Category.find(params.id)
         console.log(category)
         const categories = await Category.all()
         
-        var categories2 = await Product.query().pluck('father').groupBy('father')
-        return view.render('products_list', { products: products2, category: category, categories: categories2 })
+        var categories2 = await Product.query().where("father", father).groupBy("category").fetch();
+        
+        console.log(categories2.toJSON())
+        return view.render('products_list', { products: products2, category: category, categories: categories2.toJSON() })
       }
-
+*/
       async search({request, response,params, view})
       {
         var products=[]
@@ -97,12 +99,15 @@ class ProductController {
           }
           products= await Product.query().orderBy(sortname,sortparam).fetch()
         }
-
+        if(request.get().father)//Por categoria padre
+        {
+          products= await Product.query().where("father","LIKE","%"+request.get().father+"%").orderBy(sortname,sortparam).fetch()
+          category.name="Busqueda"
+        }
         if(request.get().name)//Busqueda por nombre
         {
           products= await Product.query().where("name","LIKE","%"+request.get().name+"%").orderBy(sortname,sortparam).fetch()
           category.name="Busqueda"
-          
         }else//Busqueda por categoria y precio
         {
           (request.get().prices === undefined) ? request.get().prices = 0 : request.get().prices = request.get().prices;
@@ -190,21 +195,6 @@ class ProductController {
         product2.long_description=product.long_description
 
         const axios = use('axios');        
-        /*await axios.get(product.image)
-        .then( (response) => {
-            
-            product.image="https://hiperpharma.com/"+product.id+".png"
-            product2.image="https://hiperpharma.com/"+product.id+".png"
-        }).catch((error) =>{
-            
-            product.image="https://hiperpharma.com/placeholder.png"
-            product2.image="https://hiperpharma.com/placeholder.png"
-            
-          })
-          */
-          
-          
-          
         return product
       }
       
