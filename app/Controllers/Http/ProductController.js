@@ -145,7 +145,7 @@ class ProductController {
                   products=await Product.query().whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
                   break;
                 case 4:
-                  products=await Product.query().whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
+                  products=await Product.query().where('price',">",50000).orderBy(sortname, sortparam).fetch()
                   break;
                 default:
                   products=Product.all().fetch()

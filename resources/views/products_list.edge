@@ -74,10 +74,10 @@
 				
 			<div class="row">
 				
-				<aside class="col-lg-3" id="sidebar_fixed">
+				<div class="col-lg-3 col-xs-12" id="">
 					
-				    <div class="filter_col">
-				        <div class="inner_bt"><a href="#" class="open_filters"><i class="ti-close"></i></a></div>
+				    <div class="">
+				        
 				        <div class="filter_type version_2">
 				            <h4><a href="#filter_1" data-toggle="collapse" class="opened">Categorias</a></h4>
 				            <div class="collapse show" id="filter_1">
@@ -139,11 +139,11 @@
 				        </div>
 				        <!-- /filter_type -->
 				        <div class="buttons">
-				            <input type="submit" class="btn_1" value="Filtrar"> <a href="#0" class="btn_1 gray">Borrar Filtros</a>
+				            <input type="submit" class="btn_1" value="Filtrar"> <a href="#" onclick="borrar()" class="btn_1">Borrar Filtros</a>
 				        </div>
 					</div>
 				
-				</aside>
+				</div>
 				
 				<!-- /col -->
 				<div class="col-lg-9">
@@ -151,6 +151,28 @@
 						
 						
 					</div>
+					<script>
+						function borrar()
+						{
+							var radios = document.getElementsByName('category');
+							for(i=0; i<radios.length; i++ ) {
+								radios[i].onclick = function(e) {
+									if(e.ctrlKey || e.metaKey) {
+										this.checked = false;
+									}
+								}
+							}
+							var radios = document.getElementsByName('prices');
+							for(i=0; i<radios.length; i++ ) {
+								radios[i].onclick = function(e) {
+									if(e.ctrlKey || e.metaKey) {
+										this.checked = false;
+									}
+								}
+							}
+						}
+						
+					</script>
 <style>
 	
 .cont{
