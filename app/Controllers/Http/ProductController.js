@@ -10,7 +10,7 @@ class ProductController {
         const product = await Product.find(params.id);
         product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
         const relateds= await Product.query().where("category","=",product.category).where("id","!=",product.id).fetch()
-        const categories=await Category.all()
+        const categories = await Category.all()
         console.log(product)
         return view.render("product_detail", {product, relateds: relateds.toJSON(), categories: categories.toJSON()});
       }
@@ -22,53 +22,12 @@ class ProductController {
         }).format(number);
         return formatted;
       }
-    /*  async bycat({request, response,params, view})
-      {
-        //console.log(request.params.id)
-        const category = await Category.find(params.id)
-        const categories = await Category.all()
-        const products = await Product.query().where("father","=",category.name).fetch()
-        
-        var products2 = []
-
-        var categories2 = await Product.query().pluck('father').groupBy('father')
-        for(const product of products.toJSON())
-        {
-            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
-            products2.push(product)
-            
-        }
-        console.log(categories.toJSON());
-        console.log(categories2)
-        return view.render('products_list', { products: products2, category: category, categories: categories2 })
-      }*/
-/*
-      async bycatmenu({request, response,params, view})
-      {
-        const products = await Product.query().where("category","LIKE",request.params.name.replace(/%20/g, ' ')).fetch()
-        var products2=[]
-        let father;
-        for(const product of products.toJSON())
-        {
-            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
-            products2.push(product)
-            father = product.father;
-        }
-        const category = await Category.query().where("name", "LIKE", request.params.name.replace(/%20/g, ' ')).first();
-        console.log(category)
-        const categories = await Category.all()
-        
-        var categories2 = await Product.query().where("father", father).groupBy("category").fetch();
-        
-        console.log(categories2.toJSON())
-        return view.render('products_list', { products: products2, category: category, categories: categories2.toJSON() })
-      }
-*/
+  
       async search({request, response,params, view})
       {
-        var products=[]
-        var products2=[]
-        var category=[]
+        var products = []
+        var products2 = []
+        var category = []
       
         var sortparam="asc"
         var sortname="name"
@@ -97,73 +56,59 @@ class ProductController {
               sortname="name"
               break;
           }
-          products= await Product.query().orderBy(sortname,sortparam).fetch()
+          products = await Product.query().orderBy(sortname,sortparam).fetch()
         }
         if(request.get().father)//Por categoria padre
         {
-          products= await Product.query().where("father","LIKE","%"+request.get().father+"%").orderBy(sortname,sortparam).fetch()
+          products = await Product.query().where("father","LIKE","%"+request.get().father+"%").orderBy(sortname,sortparam).fetch()
           category.name="Busqueda"
         }
+        
         if(request.get().name)//Busqueda por nombre
         {
-          products= await Product.query().where("name","LIKE","%"+request.get().name+"%").orderBy(sortname,sortparam).fetch()
+          
+          products = await Product.query().where("name","LIKE","%"+request.get().name+"%").orderBy(sortname,sortparam).fetch()
           category.name="Busqueda"
-        }else//Busqueda por categoria y precio
+          
+        }
+        if(request.get().category)//Filtro por categoría
         {
-          (request.get().prices === undefined) ? request.get().prices = 0 : request.get().prices = request.get().prices;
-          if(request.get().prices && request.get().category)
-          {
-            switch (parseInt(request.get().prices)) {
-              case 1:
-                products=await Product.query().where('category', request.get().category).whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
-                break;
-              case 2:
-                products=await Product.query().where('category', request.get().category).whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
-                break;
-              case 3:
-                products=await Product.query().where('category', request.get().category).whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
-                break;
-              case 4:
-                products=await Product.query().where('category', request.get().category).whereBetween('price',">",50000).orderBy(sortname, sortparam).fetch()
-                break;
-              default:
-                products=await Product.query().where('category', request.get().category).orderBy(sortname, sortparam).fetch()
-                break;
-            }
-          }else
-          {
-            if(request.get().prices)
-            {
-              switch (parseInt(request.get().prices)) {
-                case 1:
-                  products=await Product.query().whereBetween('price',[0,10000]).orderBy(sortname, sortparam).fetch()
-                  break;
-                case 2:
-                  products=await Product.query().whereBetween('price',[10000,30000]).orderBy(sortname, sortparam).fetch()
-                  break;
-                case 3:
-                  products=await Product.query().whereBetween('price',[30000,50000]).orderBy(sortname, sortparam).fetch()
-                  break;
-                case 4:
-                  products=await Product.query().where('price',">",50000).orderBy(sortname, sortparam).fetch()
-                  break;
-                default:
-                  products=Product.all().fetch()
-                  break;
-              }
-            }
-            if(request.get().category)
-            {
-              products = await Product.query().where("category","like",request.get().category).fetch();
-            }
-          }
+          products = JSON.parse(JSON.stringify(products)).filter((item) => {
+            return item.category == request.get().category;    
+          });          
+          category.name = request.get().category
+        }
+        
+        if(request.get().min)//Filtro menor precio
+        {
+          products = JSON.parse(JSON.stringify(products)).filter((item) => {
+            return item.price >= request.get().min;    
+          });
+        }
+        if(request.get().max)//Filtro mayor precio
+        {
+          products = JSON.parse(JSON.stringify(products)).filter((item) => {
+            return item.price <= request.get().max;    
+          });
+          
+          
         }
         let father = "";
-        for(const product of products.toJSON())
+        try{
+          for(const product of products.toJSON())
+          {
+            father = product.father;
+            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
+            products2.push(product)
+          }
+        }catch(Exception)
         {
-          father = product.father;
-          product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
-          products2.push(product)
+          for(const product of products)
+          {
+            father = product.father;
+            product.price=this.formatCurrency("es-CO", "COP", 0, product.price);
+            products2.push(product)
+          }
         }
 
 
@@ -203,7 +148,7 @@ class ProductController {
         var cart=request.input("CART")
         const originalcart=cart
         cart=JSON.parse(cart)
-        var products=[]
+        var products =[]
         var total=0
         for(const cart2 of cart.cart)
         {
@@ -266,7 +211,7 @@ class ProductController {
 
         var cart=request.input("CART")
         cart=JSON.parse(cart)
-        var products=[]
+        var products =[]
         var total=0
 
         const order= await new Order()

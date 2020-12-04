@@ -106,7 +106,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                                        <tbody>
                                           <tr>
-                                             <td style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif;width: 160px;" width="160"> <a href="https://hiperpharma.com/" target="_blank" style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; padding: 0 10px;"> <img alt="VamShop" height="auto" src="https://hiperpharma.com/img/logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="160"> </a> </td>
+                                             <td style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif;width: 160px;" width="160"> <a href="https://hiperpharma.com/" target="_blank" style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; padding: 0 10px;"> <img alt="" height="auto" src="http://hiperpharma.com/img/logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="160"> </a> </td>
                                           </tr>
                                        </tbody>
                                     </table>
@@ -186,12 +186,12 @@
                                              <td align="left" class="link-wrap" style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; font-size: 0px; padding: 0; padding-bottom: 20px; word-break: break-word;">
                                                 <div style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px; text-align: left; color: #4F4F4F;"><br> Estimado cliente.
  <br><br>¡Su pedido número {{order.id }}
-fue registrado! <br>Verifique el estado de su pedido contactandose con nosotros. <br></div>
+fue registrado! <br>Verifique el estado de su pedido contáctandose con nosotros. <br></div>
                                              </td>
                                           </tr>
                                           <tr>
                                              <td align="left" class="link-wrap" style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; font-size: 0px; padding: 0; padding-bottom: 20px; word-break: break-word;">
-                                                <div style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px; text-align: left; color: #4F4F4F;"><br>Si tiene alguna pregunta, por favor <a target='_blank' style='font-weight: bold;color: #2E9CC3;' href="tel:+573108878419">Contactese con nosotros</a>! <br></div>
+                                                <div style="font-family: Open Sans, Helvetica, Tahoma, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px; text-align: left; color: #4F4F4F;"><br>Si tiene alguna pregunta, por favor <a target='_blank' style='font-weight: bold;color: #2E9CC3;' href="tel:+573108878419">Contáctese con nosotros</a>! <br></div>
                                              </td>
                                           </tr>
                                        </table>
@@ -291,7 +291,9 @@ fue registrado! <br>Verifique el estado de su pedido contactandose con nosotros.
                                           <th class="image-column" width="55%" align="left" style="line-height: 18px; padding-bottom: 18px; color: #333;"> Detalle de orden</th>
                                           <th class="price-column" width="45%" align="right" style="line-height: 18px; padding-bottom: 18px; color: #333;">Numero de orden: {{order.id}}</th>
                                        </tr>
-                                       <tr>Descripción: {{prods}}</tr>
+                                       <tr>
+                                          <td colspan="2">Descripción: {{prods}}</td>
+                                       </tr>
                                     </table>
                                  </td>
                               </tr>
