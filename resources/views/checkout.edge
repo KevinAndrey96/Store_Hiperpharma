@@ -365,7 +365,12 @@ async function getClient()
 								  <span class="checkmark"></span>
 								</label>
 							</div>
-						
+						<label for="">Tipo de pago</label>
+						<select name="payment_type" id="" class="form-control">
+							<option value="gateway">Pasarela de pago</option>
+							<option value="cash_on_delivery">Pago Contraentrega</option>
+						</select>
+						<br>
 						<input type="submit" class="btn_1 full-width" value="Confirmar y pagar">
 					</div>
 					<!-- /box_general -->

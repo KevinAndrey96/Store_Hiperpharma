@@ -31,6 +31,9 @@ class ProductController {
       
         var sortparam="asc"
         var sortname="name"
+
+        var products = await Product.all()
+        products = products.toJSON()
         
         if(request.get().sort)
         {
@@ -74,7 +77,7 @@ class ProductController {
         if(request.get().category)//Filtro por categoría
         {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
-            return item.category == request.get().category;    
+            return item.category.toLowerCase() == request.get().category.toLowerCase();    
           });          
           category.name = request.get().category
         }
@@ -82,13 +85,13 @@ class ProductController {
         if(request.get().min)//Filtro menor precio
         {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
-            return item.price >= request.get().min;    
+            return item.price.toLowerCase() >= request.get().min.toLowerCase();    
           });
         }
         if(request.get().max)//Filtro mayor precio
         {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
-            return item.price <= request.get().max;    
+            return item.price.toLowerCase() <= request.get().max.toLowerCase();    
           });
           
           
@@ -247,36 +250,43 @@ class ProductController {
             console.log("Enviado Correo")
         })
 
-        const axios = require('axios');
-        var FormData = require('form-data');
+        if (request.input("payment_type") == "cash_on_delivery")
+        {
+          order.gateway = "Contraentrega";
+          await order.save()
+          return view.render('order_completed')
+        }else
+        {  
+          const axios = require('axios');
+          var FormData = require('form-data');
 
-        var bodyFormData = new FormData();
-        bodyFormData.append('userName', 'CLARITZA_MARIA-api');
-        bodyFormData.append('password', 'CLARITZA_MARIA');
-        bodyFormData.append('orderNumber', order.id);
-        bodyFormData.append('amount',  order.value+"00");
-        bodyFormData.append('returnUrl', "https://hiperpharma.com/pay");
-        bodyFormData.append('description', prods);
+          var bodyFormData = new FormData();
+          bodyFormData.append('userName', 'CLARITZA_MARIA-api');
+          bodyFormData.append('password', 'CLARITZA_MARIA');
+          bodyFormData.append('orderNumber', order.id);
+          bodyFormData.append('amount',  order.value+"00");
+          bodyFormData.append('returnUrl', "https://hiperpharma.com/pay");
+          bodyFormData.append('description', prods);
 
-        await axios({
-          method: 'post',
-          url: 'https://ecouat.credibanco.com/payment/rest/register.do',
-          data: bodyFormData,
-          headers: {
-            'content-type': `multipart/form-data; boundary=${bodyFormData._boundary}`,
-            }
-        })
-        .then(function (res) {
-          console.log("Pasarela");
-          order.gateway=res.data.orderId
-          order.save()
-          return response.redirect(res.data.formUrl)
-        })
-        .catch(function (error) {
-          console.log("Error"+error);
-          return response.redirect("https://hiperpharma.com")
-        });
-        //return view.render('order_completed')
+          await axios({
+            method: 'post',
+            url: 'https://ecouat.credibanco.com/payment/rest/register.do',
+            data: bodyFormData,
+            headers: {
+              'content-type': `multipart/form-data; boundary=${bodyFormData._boundary}`,
+              }
+          })
+          .then(function (res) {
+            console.log("Pasarela");
+            order.gateway=res.data.orderId
+            order.save()
+            return response.redirect(res.data.formUrl)
+          })
+          .catch(function (error) {
+            console.log("Error"+error);
+            return response.redirect("https://hiperpharma.com")
+          });
+        }
       }
       async pay2({request, response, view})
       {
