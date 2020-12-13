@@ -33,6 +33,7 @@ Route.get('search','ProductController.search')
 Route.get('getProduct','ProductController.get')
 Route.get('getClient','ClientController.get')
 Route.get('validateCoupon','CouponController.validate')
+Route.post('newsletter', 'NewsletterController.store').as("newsletter")
 
 Route.get('confirm', ({ view }) => {
     return view.render('order_completed')

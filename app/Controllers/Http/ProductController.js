@@ -257,6 +257,8 @@ class ProductController {
 
           }
         }
+        order.details = prods;
+        await order.save();
         
         console.log("Proceso completo")
 

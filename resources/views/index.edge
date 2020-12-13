@@ -287,7 +287,37 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span class="close">&times;</span>
-			HIPERPHARMA
+			<form action="{{ route('newsletter') }}" method="POST">
+				{{ csrfField() }}
+			<div class="row">
+				<div class="col-md-6">
+					<img src="img/slides/newsletter.jpg" width="100%" class="img-responsive" alt="">
+				</div>
+				<div class="col-md-6">
+					<img src="img/logo.png" width="100%" class="img-responsive" alt="">
+					<br><br>
+					<input type="email" required class="form-control" name="email" placeholder="Correo electrónico*">
+					<br>
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" required class="form-control" name="first_name" placeholder="Nombres*">
+							<br>
+						</div>
+						<div class="col-md-6">
+							<input type="text" required class="form-control" name="last_name" placeholder="Apellidos*">
+							<br>
+						</div>
+					</div>
+					<input type="number" required class="form-control" name="phone" placeholder="Teléfono*">
+					<br>
+					<label for=""><input type="checkbox" class="form-check-input" required>
+					Autorizo el tratamiento de mis datos personales teniendo en cuenta la política de tratamiento de datos.</label>
+					<br>
+					<br>
+					<input type="submit" value="Registrarme" class="btn_1 form-control">
+				</div>
+			</div>
+			</form>
 		</div>
 
 	</div>
