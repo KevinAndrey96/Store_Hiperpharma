@@ -4,6 +4,7 @@ const Client = use('App/Models/Client')
 const Category = use('App/Models/Category')
 const Order = use('App/Models/Order')
 const OrderProduct = use('App/Models/OrderProduct')
+const Coupon = use('App/Models/Coupon')
 
 class ProductController {
     async index({ params, view }) {
@@ -93,8 +94,6 @@ class ProductController {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
             return item.price.toLowerCase() <= request.get().max.toLowerCase();    
           });
-          
-          
         }
         let father = "";
         try{
@@ -174,7 +173,7 @@ class ProductController {
         var prices={}
         prices.subtotal=prices.subtotal+total
         prices.shipping= 0
-        prices.total=prices.subtotal+prices.shipping
+        prices.total=total
         
         return view.render("checkout", {cart: products, prices: prices, prettyprices:prettyprices, originalcart: originalcart});
       }
@@ -217,7 +216,7 @@ class ProductController {
         var products =[]
         var total=0
 
-        const order= await new Order()
+        var order= await new Order()
         order.client_id=client.id
         order.status="pending"
         order.value=0
@@ -236,7 +235,28 @@ class ProductController {
           await orderProduct.save()
           console.log("Agregado producto a Orden")
         }
+
         prods+=" Total: $"+order.value
+
+        if (request.input("COUPON")){
+          try{
+            
+          console.log("Cupón de descuento!")
+          var coupon = await Coupon.query().where("code", request.input("COUPON")).andWhere("status","=", "active").firstOrFail();
+          coupon.status = "used";
+          await coupon.save();
+
+          prods += " / Cupón de descuento aplicado: "+request.input("COUPON")+" - "+coupon.discount+"%";
+          
+          order.value = order.value-(order.value*coupon.discount/100)
+          await order.save();
+
+          prods += " / Total después de descuento: $"+order.value
+          }catch(Exception)
+          {
+
+          }
+        }
         
         console.log("Proceso completo")
 
@@ -284,7 +304,7 @@ class ProductController {
           })
           .catch(function (error) {
             console.log("Error"+error);
-            return response.redirect("https://hiperpharma.com")
+            return response.redirect("/")
           });
         }
       }

@@ -32,6 +32,7 @@ Route.get('pay','ProductController.pay2')
 Route.get('search','ProductController.search')
 Route.get('getProduct','ProductController.get')
 Route.get('getClient','ClientController.get')
+Route.get('validateCoupon','CouponController.validate')
 
 Route.get('confirm', ({ view }) => {
     return view.render('order_completed')
