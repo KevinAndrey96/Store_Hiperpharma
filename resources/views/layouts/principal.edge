@@ -20,7 +20,9 @@
 	<!-- BASE CSS -->
 	{{ style('css/bootstrap.custom.min.css') }}
 
-    {{ style('css/style.css')}}
+	{{ style('css/style.css')}}
+	
+	
 
 	<!-- SPECIFIC CSS -->
 	{{ style('css/home_1.css') }}
@@ -28,20 +30,22 @@
     {{ style('css/product_page.css') }}
 	{{ style('css/cart.css') }}
 	{{ style('css/checkout.css') }}
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <!-- YOUR CUSTOM CSS -->
 	{{ style('css/custom.css')}}
 	<script
   src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
   integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
   crossorigin="anonymous"></script>
+  
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <div id="float-cta" >
     <span>Envianos un mensaje</span>
     <a href="javascript:void(0);">
-        <i class="fa fa-whatsapp" aria-hidden="true"></i>
-        <i class="fa fa-times" aria-hidden="true"></i>
+		<img class="img -responsive" width="50" src="https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-1.png" alt="">
+        <!--<i class="fa fa-whatsapp" aria-hidden="true"></i>
+		<i class="fa fa-times" aria-hidden="true"></i>	-->
     </a>
     <div class="whatsapp-msg-container">
         <div class="whatsapp-msg-header">
@@ -101,7 +105,7 @@
 						<!-- Mobile menu button -->
 						<div class="main-menu">
 							<div id="header_menu">
-								<a href="index.html"><img src="{{ assetsUrl('img/logo.png') }}" alt="" width="100" height="35"></a>
+								<a href="/"><img src="{{ assetsUrl('img/logo.png') }}" alt="" width="100" height="35"></a>
 								<a href="#" class="open_close" id="close_in">	<i class="ti-close"></i></a>
 							</div>
 							<ul>

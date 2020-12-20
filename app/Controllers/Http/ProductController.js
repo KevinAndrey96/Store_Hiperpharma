@@ -86,13 +86,13 @@ class ProductController {
         if(request.get().min)//Filtro menor precio
         {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
-            return item.price.toLowerCase() >= request.get().min.toLowerCase();    
+            return item.price >= request.get().min;    
           });
         }
         if(request.get().max)//Filtro mayor precio
         {
           products = JSON.parse(JSON.stringify(products)).filter((item) => {
-            return item.price.toLowerCase() <= request.get().max.toLowerCase();    
+            return item.price <= request.get().max;
           });
         }
         let father = "";
@@ -148,6 +148,7 @@ class ProductController {
       async checkout({request, response, view})
       {
         var cart=request.input("CART")
+        var shipping = 1700
         const originalcart=cart
         cart=JSON.parse(cart)
         var products =[]
@@ -167,27 +168,21 @@ class ProductController {
         }
         var prettyprices={}
         prettyprices.subtotal=this.formatCurrency("es-CO", "COP", 0,total)
-        prettyprices.shipping=this.formatCurrency("es-CO", "COP", 0, 0)
-        prettyprices.total=this.formatCurrency("es-CO", "COP", 0,total+0)
+        prettyprices.shipping=this.formatCurrency("es-CO", "COP", 0, shipping)
+        prettyprices.total=this.formatCurrency("es-CO", "COP", 0,total+shipping)
 
         var prices={}
         prices.subtotal=prices.subtotal+total
-        prices.shipping= 0
+        prices.shipping= shipping
         prices.total=total
         
         return view.render("checkout", {cart: products, prices: prices, prettyprices:prettyprices, originalcart: originalcart});
       }
       async pay({request, response, view})
       {
-        //registrar al cliente si no existe
-        //si existe actualizar sus datos
-        //registrar la orden en la bd
-
-        //Recibo datos de cliente y datos de la orden
         const email=request.input("EMAIL")
         
         try{
-          //Cliente existe y se actualizan sus valores
           var client=await Client.findBy("email",email)
           var client2 = await Client.find(client.id)
           client2.name=request.input("NAME")
@@ -199,7 +194,6 @@ class ProductController {
           console.log("Actualizando cliente")
         }catch(e)
         {
-          //Cliente no existe y pasa a ser creado
           var client = await new Client()
           client.name=request.input("NAME")
           client.email=email
@@ -213,8 +207,9 @@ class ProductController {
 
         var cart=request.input("CART")
         cart=JSON.parse(cart)
-        var products =[]
-        var total=0
+        var shipping = 1700
+        //var products =[]
+        //var total=0
 
         var order= await new Order()
         order.client_id=client.id
@@ -236,7 +231,7 @@ class ProductController {
           console.log("Agregado producto a Orden")
         }
 
-        prods+=" Total: $"+order.value
+        prods+=" Total: $" + order.value + " + Envío: $"+shipping
 
         if (request.input("COUPON")){
           try{
@@ -258,6 +253,9 @@ class ProductController {
           }
         }
         order.details = prods;
+
+        order.value += shipping
+
         await order.save();
         
         console.log("Proceso completo")
