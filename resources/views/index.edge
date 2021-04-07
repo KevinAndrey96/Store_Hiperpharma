@@ -238,9 +238,9 @@
 
 		</div>
 	</div>
-	
+
 	<style>
-		
+
 		.modal {
 			display: none; /* Hidden by default */
 			position: fixed; /* Stay in place */
@@ -251,9 +251,9 @@
 			width: 100%; /* Full width */
 			height: 100%; /* Full height */
 			overflow: auto; /* Enable scroll if needed */
-			
+
 		}
-		
+
 		/* Modal Content */
 		.modal-content {
 			background-color: #fefefe;
@@ -262,7 +262,7 @@
 			border: 1px solid #888;
 			width: 80%;
 		}
-		
+
 		/* The Close Button */
 		.close {
 			color: #aaaaaa;
@@ -270,7 +270,7 @@
 			font-size: 28px;
 			font-weight: bold;
 		}
-		
+
 		.close:hover,
 		.close:focus {
 			color: #000;
@@ -290,10 +290,11 @@
 			<form action="{{ route('newsletter') }}" method="POST">
 				{{ csrfField() }}
 			<div class="row">
-				<div class="col-md-6">
+        <h1>¡Obtén un cupon de descuento!</h1>
+		<!--		<div class="col-md-6">
 					<img src="img/slides/newsletter.jpg" width="100%" class="img-responsive" alt="">
-				</div>
-				<div class="col-md-6">
+				</div> -->
+				<div class="col-md-12">
 					<img src="img/logo.png" width="100%" class="img-responsive" alt="">
 					<br><br>
 					<input type="email" required class="form-control" name="email" placeholder="Correo electrónico*">
@@ -327,23 +328,23 @@
 		});
 	// Get the modal
 	var modal = document.getElementById("myModal");
-	
+
 	// Get the button that opens the modal
 	var btn = document.getElementById("myBtn");
-	
+
 	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
-	
-	// When the user clicks the button, open the modal 
+
+	// When the user clicks the button, open the modal
 	btn.onclick = function() {
 		modal.style.display = "block";
 	}
-	
+
 	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
 		modal.style.display = "none";
 	}
-	
+
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
 		if (event.target == modal) {
